@@ -150,7 +150,8 @@ void checkingDS18B20_sensor()
 //! =============== функция проверки NTC датчика на исправность ==========================
 void checkingNTC_sensor()
 {
-    if (bool ntc = therm.getTempAverage()) // ЕСЛИ датчик NTC считался == TRUE
+    bool ntc = therm.getTempAverage();
+    if (ntc == 0) // ЕСЛИ датчик NTC считался == TRUE
     {
         lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
         lcd.print("NTC             "); // Выводим текст
