@@ -8,7 +8,7 @@
 //! ============= liberse block ================================
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <Wire.h> 
+#include <Wire.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <BlynkSimpleEsp8266.h> // библиотека Blynk
@@ -27,7 +27,7 @@
 
 const long utcOffsetInSeconds = 10800; // коректировка часового пояса +3
 
-uint8_t s1_addr[] = {0x28, 0x28, 0xF, 0x4, 0x0, 0x0, 0x0, 0x68}; // Адресс термодатчика DS18B20 №1
+uint8_t s1_addr[] = {0x28, 0x28, 0xF, 0x4, 0x0, 0x0, 0x0, 0x68}; // Адресс термодатчика DS18B20
 
 DHT dht(DHTPIN, DHTTYPE);                     // Создаём DHT термодатчик
 LiquidCrystal_I2C lcd(0x27, 16, 2);           // set the LCD address to 0x27 for a 16 chars and 2 line display
@@ -41,11 +41,11 @@ GyverNTC therm(NTC_PIN, 10500, 3950);                             // пин, с�
                                                                   // серый 4300
                                                                   // проводной 3950
 
-float DHT_humidity;                                          // переменная для влажности с DHT
-float DHT_temperature;                                       // переменная для температуры с DHT
-float temperatureHome;                                       // переменння для температуры в доме DS18B20
-float outdoorTemperature;                                    // переменная для температуры на улице DS18B20
-float BMP280_temperature;                                    // переменная для температуры BMP280
+float DHT_humidity;                                          // variable for humidity with DHT
+float DHT_temperature;                                       // variable for temperature with DHT
+float temperatureHome;                                       // variable for temperature in home DS18B20
+float outdoorTemperature;                                    // variable for temperature outdoor DS18B20
+float BMP280_temperature;                                    // variable for temperature with BMP280
 float t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12; // переменные для значения температуры на каждый час
 float t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23; // переменные для значения температуры на каждый час
 float val_max = 0;                                           // опорное значения для функции max
