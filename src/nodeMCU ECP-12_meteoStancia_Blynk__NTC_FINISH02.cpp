@@ -8,7 +8,7 @@
 //! ============= liberse block ================================
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <Wire.h> //
+#include <Wire.h> 
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <BlynkSimpleEsp8266.h> // библиотека Blynk
