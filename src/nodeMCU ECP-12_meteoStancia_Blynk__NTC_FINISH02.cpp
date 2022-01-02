@@ -423,7 +423,7 @@ void setup()
 
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk started..."); // Выводим текст
-    //Blynk.begin(auth, ssid, pass); // подклчение к Blynk
+    Blynk.begin(auth, ssid, pass); // подклчение к Blynk
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk conect... "); // Выводим текст
 
@@ -435,7 +435,7 @@ void setup()
     hour = timeClient.getHours();   // получение значения ЧАСов из Blynk
     minu = timeClient.getMinutes(); // получение значения МИНут из Blynk
     sek = timeClient.getSeconds();  // получение значения СЕКУнд из Blynk
-    //rtc.setTime(hour, minu, sek);   // запись в модуль РЕАЛЬНОГО ВРЕМЕНИ значения ЧАСА, МИНУТ, СЕКУНД
+    // rtc.setTime(hour, minu, sek);   // запись в модуль РЕАЛЬНОГО ВРЕМЕНИ значения ЧАСА, МИНУТ, СЕКУНД
 
     //!------------------------ проверка датчинов на TRUE ------------------------------
     delay(2000); //  задержка в 2 сек. перед проверкой датчиков на наличие и испрвность
@@ -470,7 +470,7 @@ void loop()
     secondScreen(); //! функция второго экрана
 
     static uint32_t tmr;
-    if (millis() - tmr >= 59000) // обработка блока раз в 59 минут
+    if (millis() - tmr >= 60000) // обработка блока раз в 0 минут
     {
         lcd.setCursor(8, 1);         // Устанавливаем курсор в начало 2 строки
         lcd.print(rtc.getTimeStr()); // Выводим ВРЕМЯ на LCD дисплей
