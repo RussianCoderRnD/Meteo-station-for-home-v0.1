@@ -1,9 +1,9 @@
 
 //! ============== Blynk block =================================
 
-#define BLYNK_TEMPLATE_ID "TMPLEAFuc2FF"
-#define BLYNK_DEVICE_NAME "ESP Meteo"
-#define BLYNK_AUTH_TOKEN "X6a0vuSe3wdQmPrk_vKY898fChF5LEIx"
+#define BLYNK_TEMPLATE_ID "TMPLEAFuc2FFЮ"                    // для коректной работы данные необходимо внести актуальные
+#define BLYNK_DEVICE_NAME "ESP MeteoЮ"                       // для коректной работы данные необходимо внести актуальные
+#define BLYNK_AUTH_TOKEN "X6a0vuSe3wdQmPrk_vKY898fChF5LEIxЮ" // для коректной работы данные необходимо внести актуальные
 
 //! ============= liberse block ================================
 #include <Arduino.h>
