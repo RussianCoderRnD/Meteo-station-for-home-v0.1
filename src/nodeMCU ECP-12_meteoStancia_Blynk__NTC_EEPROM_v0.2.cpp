@@ -1,9 +1,9 @@
 
 //! ============== Blynk block =================================
 
-#define BLYNK_TEMPLATE_ID "TMPLEAFuc2FFЮ"                    // для коректной работы данные необходимо внести актуальные
-#define BLYNK_DEVICE_NAME "ESP MeteoЮ"                       // для коректной работы данные необходимо внести актуальные
-#define BLYNK_AUTH_TOKEN "X6a0vuSe3wdQmPrk_vKY898fChF5LEIxЮ" // для коректной работы данные необходимо внести актуальные
+#define BLYNK_TEMPLATE_ID "TMPLEAFuc2FF"                    // для коректной работы данные необходимо внести актуальные
+#define BLYNK_DEVICE_NAME "ESP Meteo"                       // для коректной работы данные необходимо внести актуальные
+#define BLYNK_AUTH_TOKEN "X6a0vuSe3wdQmPrk_vKY898fChF5LEIx" // для коректной работы данные необходимо внести актуальные
 
 //! ============= liberse block ================================
 #include <Arduino.h>
@@ -229,7 +229,8 @@ void FOR_LOAD(void)
 //! ===================== функция опроса статуса датчиков true/false =====================
 void checkingSensor()
 {
-    if (DS18B20_sensor.readTemp()) // ЕСЛИ датчик DS18B20 считался == TRUE
+    bool DS = DS18B20_sensor.readTemp();
+    if (DS) // ЕСЛИ датчик DS18B20 считался == TRUE
     {
         DS18B20_status = true;
     }
@@ -239,24 +240,27 @@ void checkingSensor()
     }
 
     bool ntc = therm.getTempAverage();
-    if (ntc == 1) // ЕСЛИ датчик NTC считался == TRUE
-    {
-        NTC_status = false;
-    }
-    else
+    if (ntc) // ЕСЛИ датчик NTC считался == TRUE
     {
         NTC_status = true;
     }
-
-    if (isnan(dht.readHumidity())) // ЕСЛИ датчик считался TRUE
-    {
-        DHT_status = false;
-    }
     else
+    {
+        NTC_status = false;
+    }
+
+    bool DH = dht.readHumidity();
+    if (DH) // ЕСЛИ датчик считался TRUE
     {
         DHT_status = true;
     }
-    if (bme.readTemperature()) // ЕСЛИ датчик считался TRUE
+    else
+    {
+        DHT_status = false;
+    }
+
+    bool BM = bme.readTemperature();
+    if (BM) // ЕСЛИ датчик считался TRUE
     {
         BME_status = true;
     }
@@ -324,7 +328,7 @@ void setupScreenSensor()
         lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
         lcd.print("DHT11           "); // Выводим текст
         FOR_LOAD();
-        Serial.println("DHT11 OK");
+        Serial.println("DHT11 OK...");
         lcd.setCursor(0, 1);                   // Устанавливаем курсор в начало 2 строки
         lcd.print(String("DHT11 OK...     ")); // Выводим текст
         delay(2000);
@@ -335,7 +339,7 @@ void setupScreenSensor()
         lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
         lcd.print("BMP280          "); // Выводим текст
         FOR_LOAD();
-        Serial.println("BMP280 OK");
+        Serial.println("BMP280 OK...");
         lcd.setCursor(0, 1);                   // Устанавливаем курсор в начало 2 строки
         lcd.print(String("BMP280 OK...    ")); // Выводим текст
         delay(2000);
@@ -503,7 +507,7 @@ void secondScreen()
     {
         lcd.setCursor(8, 0);   // Устанавливаем курсор в начало 2 строки
         lcd.print("DHT ERR!"); // Выводим текст на LCD дисплей
-        Serial.println("DHT ERR!");
+        Serial.println("DHT ERR!...");
     }
     else
     {
@@ -556,8 +560,9 @@ void readEEPROMTemp()
 void setup()
 {
     Serial.begin(115200);
-    EEPROMRead();      //! функция считывания значений и записи в/из EEPROM при изменении значений
     EEPROM.begin(256); // активация функции EEPROM
+    EEPROMRead();      //! функция считывания значений и записи в/из EEPROM при изменении значений
+    readEEPROMTemp();  //! функция считывания значений температуры из EEPROM
     bme.begin();       // инициализация BME  датчика
     dht.begin();       // инициализация DHT11  датчика
     lcd.init();        // инициализация LCD
@@ -599,7 +604,6 @@ void setup()
     lcd.print("                "); // Выводим текст
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("                "); // Выводим текст
-    readEEPROMTemp();              //! функция считывания значений температуры из EEPROM
 }
 //!=======================================================================================
 void loop()
@@ -617,6 +621,11 @@ void loop()
     delay(1000);
     secondScreen(); //! функция вызова второго экрана
     delay(1000);
+
+    for (int8_t qq = 0; qq < 24; qq++)
+    {
+        Serial.println(String("t") + qq + ("  variableTemperatureHour[qq] = ") + variableTemperatureHour[qq]);
+    }
 
     static uint32_t tmr;
     if (millis() - tmr >= 600000) // обработка блока раз в 60 минут
