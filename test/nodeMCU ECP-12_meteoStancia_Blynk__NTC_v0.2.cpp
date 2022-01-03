@@ -423,7 +423,7 @@ void setup()
 
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk started..."); // Выводим текст
-    Blynk.begin(auth, ssid, pass); // подклчение к Blynk
+                                   // Blynk.begin(auth, ssid, pass); // подклчение к Blynk
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk conect... "); // Выводим текст
 
@@ -459,9 +459,13 @@ void setup()
 //!=======================================================================================
 void loop()
 {
-    readingValuesSensors();       //! функция опроса датчиков
-    hour = timeClient.getHours(); // считывание часа (0....23) для дальнейшего присвоения температуры
-    hour_temp();                  //! функция присвоения значения тепмператры переменным t0...t23
+    readingValuesSensors();         //! функция опроса датчиков
+    hour = timeClient.getSeconds(); // считывание часа (0....23) для дальнейшего присвоения температуры
+    if (hour > 23)
+    {
+        hour = 0;
+    }
+    hour_temp(); //! функция присвоения значения тепмператры переменным t0...t23
 
     int vertualPinBlynk[] = {V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20, V21, V22, V23, V24, V25, V26, V27, V28, V29, V30, V31};   // массив виртуальных пинов Blynk
     float variableTemperatureHour[] = {t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23}; // массив данных о температуре за каждый час
@@ -470,7 +474,7 @@ void loop()
     secondScreen(); //! функция второго экрана
 
     static uint32_t tmr;
-    if (millis() - tmr >= 60000) // обработка блока раз в 0 минут
+    if (millis() - tmr >= 1000) // обработка блока раз в 0 минут
     {
         lcd.setCursor(8, 1);         // Устанавливаем курсор в начало 2 строки
         lcd.print(rtc.getTimeStr()); // Выводим ВРЕМЯ на LCD дисплей
