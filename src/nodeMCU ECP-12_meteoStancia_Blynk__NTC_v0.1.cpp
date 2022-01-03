@@ -276,7 +276,7 @@ void checkSensors()
         Serial.println("DS18B20 ERROR!!");
     }
     ntc = therm.getTempAverage();
-    if (ntc < 0) // ЕСЛИ датчик NTC считался == TRUE
+    if (ntc <= 0.0) // ЕСЛИ датчик NTC считался == TRUE
     {
         NTC = false;
         Serial.println("NTC ERROR!!!    ");
@@ -557,10 +557,6 @@ void secondScreen()
     else
     {
         outdoorTemperature = therm.getTempAverage();
-        if (outdoorTemperature > 100)
-        {
-            outdoorTemperature = 100;
-        }
         lcd.setCursor(0, 1);                                 // Устанавливаем курсор в начало 2 строки
         lcd.print(String(" ") + outdoorTemperature + "\1 "); // Выводим текст на LCD дисплей
     }
@@ -572,6 +568,11 @@ void secondScreen()
     }
     else
     {
+        float DHT_hum = DHT_humidity;
+        if (DHT_hum > 100.0)
+        {
+            DHT_humidity = 100.0;
+        }
         Serial.println(String("Влжность ") + DHT_humidity + "%");
         lcd.setCursor(8, 0);                          // Устанавливаем курсор в начало 2 строки
         lcd.print(String(" ") + DHT_humidity + "% "); // Выводим текст на LCD дисплей
@@ -710,7 +711,7 @@ void loop()
     timeLCD();      //!
 
     static uint32_t tmr;
-    if (millis() - tmr >= 6000) // обработка блока раз в 0 минут
+    if (millis() - tmr >= 600000) // обработка блока раз в 0 минут
     {
         for (int8_t q = 0; q < 24; q++)
         {
