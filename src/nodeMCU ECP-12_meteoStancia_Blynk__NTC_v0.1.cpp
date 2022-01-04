@@ -115,7 +115,7 @@ void setBright()
 //!=========================== checkEEPROM ===============================================
 void checkEEPROM()
 {
-    if (eepromFlag && (millis() - eepromTimer >= 600000))
+    if (eepromFlag && (millis() - eepromTimer >= 300000))
     {                          // если флаг поднят и с последнего нажатия прошло 10 секунд (10 000 мс)
         eepromFlag = false;    // опустили флаг
         EEPROM.write(0, t0);   // записали в EEPROM
@@ -693,7 +693,7 @@ void setup()
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("                "); // Выводим текст
 }
-//!=======================================================================================
+//!=========================== void loop() ===============================================
 void loop()
 {
     checkEEPROM();                //! проверка EEPROM
@@ -711,12 +711,10 @@ void loop()
     timeLCD();      //!
 
     static uint32_t tmr;
-    if (millis() - tmr >= 600000) // обработка блока раз в 0 минут
+    if (millis() - tmr >= 300000) // обработка блока раз в 0 минут
     {
         for (int8_t q = 0; q < 24; q++)
         {
-            lcd.setCursor(8, 1);                                                // Устанавливаем курсор в начало 2 строки
-            lcd.print(rtc.getTimeStr());                                        // Выводим ВРЕМЯ на LCD дисплей
             Blynk.virtualWrite(vertualPinBlynk[q], variableTemperatureHour[q]); // передача в Blynk  почасовых переменных температуры
             Serial.println(String("vertualPinBlynk[q] = ") + vertualPinBlynk[q] + ("  variableTemperatureHour[q] = ") + variableTemperatureHour[q]);
         }
