@@ -53,11 +53,10 @@ float t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12; // переменн
 float t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23; // переменные для значения температуры на каждый час
 float val_max = 0;                                           // опорное значения для функции max
 float val_min;                                               // опорное значения для функции min
-float ntc;
-int BMP280_atmosphericPressure; // переменная атмосферного давления с датчика BMP280
-int hour;                       // переменная ЧАСЫ
-int minu;                       // переменная МИНУТЫ
-int sek;                        // переменная СЕКУНДЫ
+int BMP280_atmosphericPressure;                              // переменная атмосферного давления с датчика BMP280
+int hour;                                                    // переменная ЧАСЫ
+int minu;                                                    // переменная МИНУТЫ
+int sek;                                                     // переменная СЕКУНДЫ
 bool DS, NTC, DHT, BMP;
 
 char auth[] = BLYNK_AUTH_TOKEN;
@@ -115,7 +114,7 @@ void setBright()
 //!=========================== checkEEPROM ===============================================
 void checkEEPROM()
 {
-    if (eepromFlag && (millis() - eepromTimer >= 300000))
+    if (eepromFlag && (millis() - eepromTimer >= 1))
     {                          // если флаг поднят и с последнего нажатия прошло 10 секунд (10 000 мс)
         eepromFlag = false;    // опустили флаг
         EEPROM.write(0, t0);   // записали в EEPROM
@@ -275,6 +274,7 @@ void checkSensors()
         DS = false;
         Serial.println("DS18B20 ERROR!!");
     }
+    float ntc;
     ntc = therm.getTempAverage();
     if (ntc <= 0.0) // ЕСЛИ датчик NTC считался == TRUE
     {
