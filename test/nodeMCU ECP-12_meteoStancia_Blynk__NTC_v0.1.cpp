@@ -60,8 +60,10 @@ int sek;                                                     // переменн
 bool DS, NTC, DHT, BMP;
 
 char auth[] = BLYNK_AUTH_TOKEN;
-char ssid[] = "itel A16 Plus_plus";
-char pass[] = "Acer5560g!";
+char ssid[] = "Samsung 8S";
+char pass[] = "";
+// char ssid[] = "itel A16 Plus_plus";
+// char pass[] = "Acer5560g!";
 
 uint32_t eepromTimer = 0;   // EEPROM таймер
 boolean eepromFlag = false; // EEPROM флаг = 0
@@ -110,11 +112,13 @@ void setBright()
 {
     eepromFlag = true;      // поднять флаг
     eepromTimer = millis(); // сбросить таймер
+    Serial.println(String("setBright ") + t0);
 }
 //!=========================== checkEEPROM ===============================================
 void checkEEPROM()
 {
-    if (eepromFlag && (millis() - eepromTimer >= 1))
+    Serial.println("checkEEPROM");
+    if (eepromFlag)
     {                          // если флаг поднят и с последнего нажатия прошло 10 секунд (10 000 мс)
         eepromFlag = false;    // опустили флаг
         EEPROM.write(0, t0);   // записали в EEPROM
@@ -142,40 +146,46 @@ void checkEEPROM()
         EEPROM.write(44, t22); // записали в EEPROM
         EEPROM.write(46, t23); // записали в EEPROM
         EEPROM.commit();
-        if (EEPROM.commit())
-        {
-            Serial.println("checkEEPROM successfully committed");
-        }
-        else
-        {
-            Serial.println("ERROR! checkEEPROM commit failed");
-        }
-        /*  Serial.println(String("checkEEPROM t0 ") + t0);
-          Serial.println(String("checkEEPROM t1 ") + t1);
-          Serial.println(String("checkEEPROM t2 ") + t2);
-          Serial.println(String("checkEEPROM t3 ") + t3);
-          Serial.println(String("checkEEPROM t4 ") + t4);
-          Serial.println(String("checkEEPROM t5 ") + t5);
-          Serial.println(String("checkEEPROM t6 ") + t6);
-          Serial.println(String("checkEEPROM t7 ") + t7);
-          Serial.println(String("checkEEPROM t8 ") + t8);
-          Serial.println(String("checkEEPROM t9 ") + t9);
-          Serial.println(String("checkEEPROM t10 ") + t10);
-          Serial.println(String("checkEEPROM t11 ") + t11);
-          Serial.println(String("checkEEPROM t12 ") + t12);
-          Serial.println(String("checkEEPROM t13 ") + t13);
-          Serial.println(String("checkEEPROM t14 ") + t14);
-          Serial.println(String("checkEEPROM t15 ") + t15);
-          Serial.println(String("checkEEPROM t16 ") + t16);
-          Serial.println(String("checkEEPROM t17 ") + t17);
-          Serial.println(String("checkEEPROM t18 ") + t18);
-          Serial.println(String("checkEEPROM t19 ") + t19);
-          Serial.println(String("checkEEPROM t20 ") + t20);
-          Serial.println(String("checkEEPROM t21 ") + t21);
-          Serial.println(String("checkEEPROM t22 ") + t22);
-          Serial.println(String("checkEEPROM t23 ") + t23);
-          delay(1000);
-          */
+        /* if (EEPROM.commit())
+         {
+             Serial.println("checkEEPROM successfully committed");
+         }
+         else
+         {
+             Serial.println("ERROR! checkEEPROM commit failed");
+         }
+         */
+        Serial.println(String("checkEEPROM TRUE t0 ") + t0);
+        Serial.println(String("checkEEPROM TRUE t1 ") + t1);
+        Serial.println(String("checkEEPROM TRUE t2 ") + t2);
+        Serial.println(String("checkEEPROM t3 ") + t3);
+        Serial.println(String("checkEEPROM t4 ") + t4);
+        Serial.println(String("checkEEPROM t5 ") + t5);
+        Serial.println(String("checkEEPROM t6 ") + t6);
+        Serial.println(String("checkEEPROM t7 ") + t7);
+        Serial.println(String("checkEEPROM t8 ") + t8);
+        Serial.println(String("checkEEPROM t9 ") + t9);
+        Serial.println(String("checkEEPROM t10 ") + t10);
+        Serial.println(String("checkEEPROM t11 ") + t11);
+        Serial.println(String("checkEEPROM t12 ") + t12);
+        Serial.println(String("checkEEPROM t13 ") + t13);
+        Serial.println(String("checkEEPROM t14 ") + t14);
+        Serial.println(String("checkEEPROM t15 ") + t15);
+        Serial.println(String("checkEEPROM t16 ") + t16);
+        Serial.println(String("checkEEPROM t17 ") + t17);
+        Serial.println(String("checkEEPROM t18 ") + t18);
+        Serial.println(String("checkEEPROM t19 ") + t19);
+        Serial.println(String("checkEEPROM t20 ") + t20);
+        Serial.println(String("checkEEPROM t21 ") + t21);
+        Serial.println(String("checkEEPROM t22 ") + t22);
+        Serial.println(String("checkEEPROM t23 ") + t23);
+        * /
+    }
+    else
+    {
+        Serial.println(String("checkEEPROM  FOLSE t0 ") + t0);
+        Serial.println(String("checkEEPROM FOLSE t1 ") + t1);
+        Serial.println(String("checkEEPROM FOLSE t2 ") + t2);
     }
 }
 //!=========================== EEPROMRead ================================================
@@ -209,14 +219,8 @@ void EEPROMRead()
         EEPROM.write(44, t22);             // записали в EEPROM
         EEPROM.write(46, t23);             // записали в EEPROM
         EEPROM.commit();
-        if (EEPROM.commit())
-        {
-            Serial.println("EEPROMRead successfully committed");
-        }
-        else
-        {
-            Serial.println("ERROR! EEPROMRead commit failed");
-        }
+
+        Serial.println("EEPROMRead successfully committed");
     }
     t0 = EEPROM.read(0);   // прочитали температуру
     t1 = EEPROM.read(2);   // прочитали температуру
@@ -242,9 +246,10 @@ void EEPROMRead()
     t21 = EEPROM.read(42); // прочитали температуру
     t22 = EEPROM.read(44); // прочитали температуру
     t23 = EEPROM.read(46); // прочитали температуру
+    Serial.println("EEPROMRead read memory values ");
 }
 //!====================== функция анимации проверки датчика ==============================
-void FOR_LOAD(void)
+void FOR_LOAD()
 {
     for (int i = 0; i < 16; i++)
     {
@@ -398,103 +403,128 @@ void readingValuesSensors()
 //!======= функция присвоения температуры переменным на каждый час =======================
 void hour_temp()
 {
+    Serial.println(String("hour_temp  0  ") + t0);
     switch (hour)
     {
     case 0:
         t0 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp  0  ") + t0); //!
         break;
     case 1:
         t1 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 1  ") + t1); //!
         break;
     case 2:
         t2 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 2  ") + t2); //!
         break;
     case 3:
         t3 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 3  ") + t3); //!//!
         break;
     case 4:
         t4 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 4  ") + t4); //!//!
         break;
     case 5:
         t5 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 5  ") + t5); //!//!
         break;
     case 6:
         t6 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 6  ") + t6); //!//!
         break;
     case 7:
         t7 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 7  ") + t7); //!//!
         break;
     case 8:
         t8 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 8  ") + t8); //!//!
         break;
     case 9:
         t9 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 9  ") + t9); //!//!
         break;
     case 10:
         t10 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 10  ") + t10); //!//!
         break;
     case 11:
         t11 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 11  ") + t11); //!//!
         break;
     case 12:
         t12 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 12  ") + t12); //!//!
         break;
     case 13:
         t13 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 13  ") + t13); //!//!
         break;
     case 14:
         t14 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 14  ") + t14); //!//!
         break;
     case 15:
         t15 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 15  ") + t15); //!//!
         break;
     case 16:
         t16 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 16  ") + t16); //!//!
         break;
     case 17:
         t17 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 17  ") + t17); //!//!
         break;
     case 18:
         t18 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 18  ") + t18); //!//!
         break;
     case 19:
         t19 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 19  ") + t19); //!//!
         break;
     case 20:
         t20 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 20  ") + t20); //!//!
         break;
     case 21:
         t21 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 21  ") + t21); //!//!
         break;
     case 22:
         t22 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 22  ") + t22); //!//!
         break;
     case 23:
         t23 = DS18B20_sensor.getTemp();
-        setBright(); //!
+        setBright();
+        Serial.println(String("hour_temp 23  ") + t23); //!
         break;
     }
 }
@@ -647,23 +677,20 @@ void tEEPROMRead()
 void setup()
 {
     Serial.begin(115200);
-    EEPROMRead();     //!
-    EEPROM.begin(64); // активация функции EEPROM
-    tEEPROMRead();    //!
-    bme.begin();      // инициализация BME  датчика
-    dht.begin();      // инициализация DHT11  датчика
-    lcd.init();       // инициализация LCD
-
-    lcd.backlight(); // Включаем подсветку LCD дислея
-
-    lcd.createChar(1, degree1); //  Загружаем 2 символ ГРАДУСА в ОЗУ дисплея
-    lcd.createChar(2, degree2); //  Загружаем 3 символ СТРЕЛКА ВВЕРХ в ОЗУ дисплея
-    lcd.createChar(3, degree3); //  Загружаем 4 символ СТРЕЛКА ВНИЗ в ОЗУ дисплея
-    lcd.createChar(4, degree4); //  Загружаем 4 символ СТРЕЛКА В ПРАВО в ОЗУ дисплея
-
+    EEPROM.begin(128);             // активация функции EEPROM
+    EEPROMRead();                  //!
+    tEEPROMRead();                 //!
+    bme.begin();                   // инициализация BME  датчика
+    dht.begin();                   // инициализация DHT11  датчика
+    lcd.init();                    // инициализация LCD
+    lcd.backlight();               // Включаем подсветку LCD дислея
+    lcd.createChar(1, degree1);    //  Загружаем 2 символ ГРАДУСА в ОЗУ дисплея
+    lcd.createChar(2, degree2);    //  Загружаем 3 символ СТРЕЛКА ВВЕРХ в ОЗУ дисплея
+    lcd.createChar(3, degree3);    //  Загружаем 4 символ СТРЕЛКА ВНИЗ в ОЗУ дисплея
+    lcd.createChar(4, degree4);    //  Загружаем 4 символ СТРЕЛКА В ПРАВО в ОЗУ дисплея
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk started..."); // Выводим текст
-    Blynk.begin(auth, ssid, pass); // подклчение к Blynk
+                                   //  Blynk.begin(auth, ssid, pass); // подклчение к Blynk
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk conect... "); // Выводим текст
 
@@ -696,11 +723,11 @@ void setup()
 //!=========================== void loop() ===============================================
 void loop()
 {
-    checkEEPROM();                //! проверка EEPROM
-    readingValuesSensors();       //!
-    checkSensors();               //!
-    hour = timeClient.getHours(); // считывание часа (0....23) для дальнейшего присвоения температуры
-    hour_temp();                  //! функция присвоения значения тепмператры переменным t0...t23
+    checkEEPROM();                  //! проверка EEPROM
+    readingValuesSensors();         //!
+                                    //  checkSensors();                 //!
+    hour = timeClient.getMinutes(); // считывание часа (0....23) для дальнейшего присвоения температуры
+    hour_temp();                    //! функция присвоения значения тепмператры переменным t0...t23
 
     int vertualPinBlynk[] = {V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20, V21, V22, V23, V24, V25, V26, V27, V28, V29, V30, V31};   // массив виртуальных пинов Blynk
     float variableTemperatureHour[] = {t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23}; // массив данных о температуре за каждый час
@@ -725,5 +752,6 @@ void loop()
         }
         tmr = millis();
     }
-    variablesForBlynk(); //! функция передачи данных в  Blynk
+    //  variablesForBlynk(); //! функция передачи данных в  Blynk
+    tEEPROMRead();
 }
