@@ -61,13 +61,12 @@ uint8_t BMP280_atmosphericPressure; // переменная атмосферно
 uint8_t hour;                       // переменная ЧАСЫ
 uint8_t minu;                       // переменная МИНУТЫ
 uint8_t sek;                        // переменная СЕКУНДЫ
+uint8_t memSize = 64;               // размер выделяемой памяти в EEPROM
 bool DS, NTC, DHT, BMP;
 
 char auth[] = BLYNK_AUTH_TOKEN;
-char ssid[] = "Samsung 8S";
-char pass[] = "";
-// char ssid[] = "itel A16 Plus_plus";
-// char pass[] = "Acer5560g!";
+char ssid[] = "itel A16 Plus_plus";
+char pass[] = "Acer5560g!";
 
 byte degree1[8] = // кодируем символ градуса
     {
@@ -110,7 +109,7 @@ byte degree4[8] = // кодируем символ " стрелка в прав�
         B11000,
 };
 //!============ функция записи значений: temperatura в адрес: addr ===================================================
-void EEPROMWrite(int addr, float temperatura) //
+void EEPROMWrite(uint8_t addr, float temperatura) //
 {
     EEPROM.write(addr, temperatura); // записали в EEPROM
 }
@@ -123,7 +122,7 @@ void FOR_LOAD()
         lcd.print("\4");     // Выводим символ " > "
         delay(50);
     }
-    for (int i = 0; i < 16; i++)
+    for (uint8_t i = 0; i < 16; i++)
     {
         lcd.setCursor(i, 0); // Устанавливаем курсор в начало 2 строки
         lcd.print("  ");     // Затираем символ
@@ -273,43 +272,43 @@ void min_temp()
     {
     case 0:
         m0 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp  0  ") + m0); //!
+        Serial.println(String("***************************************** min_temp  0  ") + m0); //!
         break;
     case 6:
         m1 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 1  ") + m1); //!
+        Serial.println(String("***************************************** min_temp 1  ") + m1); //!
         break;
     case 12:
         m2 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 2  ") + m2); //!
+        Serial.println(String("***************************************** min_temp 2  ") + m2); //!
         break;
     case 18:
         m3 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 3  ") + m3); //!//!
+        Serial.println(String("***************************************** min_temp 3  ") + m3); //!//!
         break;
     case 24:
         m4 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 4  ") + m4); //!//!
+        Serial.println(String("***************************************** min_temp 4  ") + m4); //!//!
         break;
     case 30:
         m5 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 5  ") + m5); //!//!
+        Serial.println(String("***************************************** min_temp 5  ") + m5); //!//!
         break;
     case 36:
         m6 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 6  ") + m6); //!//!
+        Serial.println(String("***************************************** min_temp 6  ") + m6); //!//!
         break;
     case 42:
         m7 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 7  ") + m7); //!//!
+        Serial.println(String("***************************************** min_temp 7  ") + m7); //!//!
         break;
     case 48:
         m8 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 8  ") + m8); //!//!
+        Serial.println(String("***************************************** min_temp 8  ") + m8); //!//!
         break;
     case 54:
         m9 = DS18B20_sensor.getTemp();
-        Serial.println(String("min_temp 9  ") + m9); //!//!
+        Serial.println(String("***************************************** min_temp 9  ") + m9); //!//!
         break;
     }
     average = (m0 + m1 + m2 + m3 + m4 + m5 + m6 + m7 + m8 + m9) / 10;
@@ -550,11 +549,10 @@ void tEEPROMRead()
 void EEPROMRead()
 {
     float ii[] = {t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23};
-    int aa[] = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46};
-    for (int i = 0; i <= 23; i++)
+    uint8_t aa[] = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46};
+    for (uint8_t i = 0; i <= 23; i++)
     {
         ii[i] = EEPROM.read(aa[i]); // прочитали температуру
-        Serial.println(String("t") + i + (" ") + ii[i] + ("  address: ") + aa[i]);
     }
     t0 = ii[0];
     t1 = ii[1];
@@ -585,7 +583,7 @@ void EEPROMRead()
 void setup()
 {
     Serial.begin(115200);
-    EEPROM.begin(128); // активация функции EEPROM
+    EEPROM.begin(memSize); // активация функции EEPROM
     EEPROMRead();
     bme.begin();                   // инициализация BME  датчика
     dht.begin();                   // инициализация DHT11  датчика
@@ -636,7 +634,7 @@ void loop()
     hour = timeClient.getHours();   // считывание часа (0....23) для дальнейшего присвоения температуры
 
     static uint32_t tmrHurs;
-    if (millis() - tmrHurs >= 6000000) // обработка блока раз в 60 минут
+    if (millis() - tmrHurs >= 600000) // обработка блока раз в 60 минут
     {
         hour_temp(); //! функция присвоения значения тепмператры переменным t0...t23
         tmrHurs = millis();
@@ -657,8 +655,8 @@ void loop()
     static uint32_t tmr;
     if (millis() - tmr >= 60000) // обработка блока раз в 1 минуту
     {
-        int vertualPinBlynk[] = {V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20, V21, V22, V23, V24, V25, V26, V27, V28, V29, V30, V31};   // массив виртуальных пинов Blynk
-        float variableTemperatureHour[] = {t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23}; // массив данных о температуре за каждый час
+        uint8_t vertualPinBlynk[] = {V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20, V21, V22, V23, V24, V25, V26, V27, V28, V29, V30, V31}; // массив виртуальных пинов Blynk
+        float variableTemperatureHour[] = {t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23};   // массив данных о температуре за каждый час
 
         for (int8_t q = 0; q < 24; q++)
         {
@@ -673,7 +671,6 @@ void loop()
         EEPROMRead();
         min_temp(); //! функция присвоения значения тепмператры переменным t0...t23
         tmr = millis();
-        tEEPROMRead();
     }
     lcd.setCursor(8, 1);         // Устанавливаем курсор в начало 2 строки
     lcd.print(rtc.getTimeStr()); // Выводим ВРЕМЯ на LCD дисплей
