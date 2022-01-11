@@ -499,7 +499,6 @@ void secondScreen()
         {
             DHT_humidity = 100.0;
         }
-        Serial.println(String("Влжность ") + DHT_humidity + "%");
         lcd.setCursor(8, 0);                          // Устанавливаем курсор в начало 2 строки
         lcd.print(String(" ") + DHT_humidity + "% "); // Выводим текст на LCD дисплей
     }
