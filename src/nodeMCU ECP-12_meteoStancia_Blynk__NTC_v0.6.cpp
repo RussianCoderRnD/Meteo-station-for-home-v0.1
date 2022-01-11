@@ -137,44 +137,44 @@ void checkSensors()
     if (DS18B20_sensor.readTemp()) // ЕСЛИ датчик DS18B20 считался == TRUE
     {
         DS = true;
-        Serial.println("DS18B20 OK...");
+        //  Serial.println("DS18B20 OK...");
     }
     else
     {
         DS = false;
-        Serial.println("DS18B20 ERROR!!");
+        //  Serial.println("DS18B20 ERROR!!");
     }
     float ntc;
     ntc = therm.getTempAverage();
     if (ntc <= 0.0) // ЕСЛИ датчик NTC считался == TRUE
     {
         NTC = false;
-        Serial.println("NTC ERROR!!!    ");
+        //  Serial.println("NTC ERROR!!!    ");
     }
     else
     {
         NTC = true;
-        Serial.println("NTC OK...       ");
+        // Serial.println("NTC OK...       ");
     }
     if (isnan(dht.readHumidity())) // ЕСЛИ датчик считался TRUE
     {
         DHT = false;
-        Serial.println("DHT11 ERROR!!! ");
+        // Serial.println("DHT11 ERROR!!! ");
     }
     else
     {
         DHT = true;
-        Serial.println("DHT11 OK...");
+        //  Serial.println("DHT11 OK...");
     }
     if (bme.readTemperature()) // ЕСЛИ датчик считался TRUE
     {
         BMP = true;
-        Serial.println("BMP280 OK...");
+        //  Serial.println("BMP280 OK...");
     }
     else
     {
         BMP = false;
-        Serial.println("BMP280 ERROR!!! ");
+        //  Serial.println("BMP280 ERROR!!! ");
     }
 }
 //! === функция проверки DS18B20/ NTC/ DHT датчиков на исправность и вывода на дисплей вызввается из void setup()=====
@@ -311,7 +311,7 @@ void min_temp()
         Serial.println(String("***************************************** min_temp 9  ") + m9); //!//!
         break;
     }
-    average = (m0 + m1 + m2 + m3 + m4 + m5 + m6 + m7 + m8 + m9) / 10;
+    average = (m0 + m1 + m2 + m3 + m4 + m5 + m6 + m7 + m8 + m9) / 10.0;
 }
 //!======= функция присвоения значения температуры переменным на каждый час и запись их в EEPROM =====================
 void hour_temp()
@@ -583,8 +583,7 @@ void EEPROMRead()
 void setup()
 {
     Serial.begin(115200);
-    EEPROM.begin(memSize); // активация функции EEPROM
-    EEPROMRead();
+    EEPROM.begin(memSize);         // активация функции EEPROM
     bme.begin();                   // инициализация BME  датчика
     dht.begin();                   // инициализация DHT11  датчика
     lcd.init();                    // инициализация LCD
@@ -596,6 +595,12 @@ void setup()
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk started..."); // Выводим текст
     Blynk.begin(auth, ssid, pass); // подклчение к Blynk
+    while (Blynk.connect() == false)
+    {
+        Serial.println(" No connect...");
+        Blynk.notify("No connect...");
+    }
+    Blynk.notify("Device started");
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk conect... "); // Выводим текст
 
@@ -617,6 +622,7 @@ void setup()
 
     lcd.setCursor(0, 1);                   // Устанавливаем курсор в начало 2 строки
     lcd.print(String(".......GO.......")); // Выводим текст
+    Blynk.notify(".......GO.......");
 
     //!------------------------ затирание строк на дисплее------------------------------
     delay(2000);                   //  задержка в 2 сек. перед затиранием строк
@@ -624,32 +630,26 @@ void setup()
     lcd.print("                "); // Выводим текст
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("                "); // Выводим текст
+
+    EEPROMRead();
+    tEEPROMRead();
 }
 //!=========================== void loop() ===========================================================================
 void loop()
 {
-    readingValuesSensors();         //!
-    checkSensors();                 //!
-    minu = timeClient.getMinutes(); // считывание часа (0....23) для дальнейшего присвоения температуры
-    hour = timeClient.getHours();   // считывание часа (0....23) для дальнейшего присвоения температуры
-
-    static uint32_t tmrHurs;
-    if (millis() - tmrHurs >= 600000) // обработка блока раз в 60 минут
-    {
-        hour_temp(); //! функция присвоения значения тепмператры переменным t0...t23
-        tmrHurs = millis();
-    }
+    readingValuesSensors(); //!
+    checkSensors();         //!
 
     static uint32_t secondScr;
     if (millis() - secondScr >= 6000) // обработка блока раз в 0 минут
     {
-        secondScreen(); //! функция второго экрана //! функция присвоения значения тепмператры переменным t0...t23
+        secondScreen(); //!
         secondScr = millis();
     }
     static uint32_t firstScr;
     if (millis() - firstScr >= 12000) // обработка блока раз в 0 минут
     {
-        firstScreen(); //! функция второго экрана //! функция присвоения значения тепмператры переменным t0...t23
+        firstScreen(); //!
         firstScr = millis();
     }
     static uint32_t tmr;
@@ -668,8 +668,12 @@ void loop()
             val_max = max(variableTemperatureHour[i], val_max);
             val_min = min(variableTemperatureHour[i], val_min);
         }
+        minu = timeClient.getMinutes(); // считывание часа (0....23) для дальнейшего присвоения температуры
+        hour = timeClient.getHours();   // считывание часа (0....23) для дальнейшего присвоения температуры
+        min_temp();                     //! функция присвоения значения тепмператры переменным m0...m9
+        hour_temp();                    //! функция присвоения значения тепмператры переменным t0...t23
         EEPROMRead();
-        min_temp(); //! функция присвоения значения тепмператры переменным t0...t23
+
         tmr = millis();
     }
     lcd.setCursor(8, 1);         // Устанавливаем курсор в начало 2 строки
