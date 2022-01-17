@@ -60,10 +60,8 @@ int sek;                                                     // переменн
 bool DS, NTC, DHT, BMP;
 
 char auth[] = BLYNK_AUTH_TOKEN;
-char ssid[] = "Samsung 8S";
-char pass[] = "";
-// char ssid[] = "itel A16 Plus_plus";
-// char pass[] = "Acer5560g!";
+char ssid[] = "itel A16 Plus_plus";
+char pass[] = "Acer5560g!";
 
 uint32_t eepromTimer = 0;   // EEPROM таймер
 boolean eepromFlag = false; // EEPROM флаг = 0
@@ -146,15 +144,15 @@ void checkEEPROM()
         EEPROM.write(44, t22); // записали в EEPROM
         EEPROM.write(46, t23); // записали в EEPROM
         EEPROM.commit();
-        /* if (EEPROM.commit())
-         {
-             Serial.println("checkEEPROM successfully committed");
-         }
-         else
-         {
-             Serial.println("ERROR! checkEEPROM commit failed");
-         }
-         */
+        if (EEPROM.commit())
+        {
+            Serial.println("checkEEPROM successfully committed");
+        }
+        else
+        {
+            Serial.println("ERROR! checkEEPROM commit failed");
+        }
+
         Serial.println(String("checkEEPROM TRUE t0 ") + t0);
         Serial.println(String("checkEEPROM TRUE t1 ") + t1);
         Serial.println(String("checkEEPROM TRUE t2 ") + t2);
@@ -179,7 +177,6 @@ void checkEEPROM()
         Serial.println(String("checkEEPROM t21 ") + t21);
         Serial.println(String("checkEEPROM t22 ") + t22);
         Serial.println(String("checkEEPROM t23 ") + t23);
-        * /
     }
     else
     {
@@ -690,7 +687,7 @@ void setup()
     lcd.createChar(4, degree4);    //  Загружаем 4 символ СТРЕЛКА В ПРАВО в ОЗУ дисплея
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk started..."); // Выводим текст
-                                   //  Blynk.begin(auth, ssid, pass); // подклчение к Blynk
+    Blynk.begin(auth, ssid, pass); // подклчение к Blynk
     lcd.setCursor(0, 1);           // Устанавливаем курсор в начало 2 строки
     lcd.print("Blynk conect... "); // Выводим текст
 
@@ -752,6 +749,6 @@ void loop()
         }
         tmr = millis();
     }
-    //  variablesForBlynk(); //! функция передачи данных в  Blynk
+    variablesForBlynk(); //! функция передачи данных в  Blynk
     tEEPROMRead();
 }
